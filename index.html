@@ -1,1 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrewFollo AI — AI Receptionist for Home Service Businesses</title>
+  <meta name="description" content="CrewFollo AI helps home service businesses capture leads, request job details, schedule estimates, and follow up automatically." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0b1020;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: #70e1c8; }
+    .nav a.button-small {
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      font-size: 14px;
+      color: #e9eefc;
+    }
+    .hero {
+      padding: 88px 0 72px;
+      background:
+        radial-gradient(circle at top left, rgba(112,225,200,0.25), transparent 38%),
+        radial-gradient(circle at top right, rgba(113,139,255,0.22), transparent 34%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 8px 12px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(112,225,200,0.35);
+      background: rgba(112,225,200,0.08);
+      border-radius: 999px;
+      color: #9bf4df;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 20px;
+      color: #c8d2ee;
+      max-width: 650px;
+      margin-bottom: 32px;
+    }
+    .buttons { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .button-primary, .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 800;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .button-primary { background: #70e1c8; color: #08101f; }
+    .button-secondary { border: 1px solid rgba(255,255,255,0.18); color: #e9eefc; }
+    .button-primary:hover, .button-secondary:hover { transform: translateY(-1px); opacity: 0.92; }
+    .demo-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+    }
+    .chat {
+      display: grid;
+      gap: 14px;
+    }
+    .bubble {
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+    .customer { background: rgba(255,255,255,0.12); color: #edf3ff; }
+    .ai { background: rgba(112,225,200,0.16); color: #dffff8; border: 1px solid rgba(112,225,200,0.22); }
+    .label { font-size: 12px; color: #91a0c2; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; }
+    section { padding: 72px 0; }
+    .section-title {
+      font-size: clamp(32px, 4vw, 48px);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .section-subtitle {
+      color: #b9c5e6;
+      font-size: 18px;
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .card h3 { font-size: 20px; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .card p { color: #bdc8e8; font-size: 16px; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      counter-reset: step;
+    }
+    .step {
+      background: #111a33;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 22px;
+      position: relative;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #70e1c8;
+      color: #08101f;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+    .step h3 { font-size: 18px; margin-bottom: 8px; }
+    .step p { color: #bdc8e8; font-size: 15px; }
+    .cta {
+      background: linear-gradient(135deg, rgba(112,225,200,0.18), rgba(113,139,255,0.18));
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .cta-box {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .cta-box p { color: #c8d2ee; font-size: 18px; margin: 16px 0 28px; }
+    footer {
+      padding: 32px 0;
+      color: #8492b7;
+      font-size: 14px;
+    }
+    footer .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+    }
+    @media (max-width: 860px) {
+      .hero-grid, .cards, .steps { grid-template-columns: 1fr; }
+      .hero { padding: 64px 0 48px; }
+      section { padding: 52px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">CrewFollo <span>AI</span></div>
+      <a class="button-small" href="mailto:crewfollo@proton.me">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="badge">AI receptionist for local service businesses</div>
+          <h1>Never lose a home service lead again.</h1>
+          <p>CrewFollo AI helps handymen, painters, plumbers, electricians, cleaners, roofers, and small contractors respond to leads, request job details, schedule estimates, and follow up automatically.</p>
+          <div class="buttons">
+            <a class="button-primary" href="https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK">Request Early Access</a>
+            <a class="button-secondary" href="#how-it-works">See How It Works</a>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <div class="chat">
+            <div>
+              <div class="label">Customer</div>
+              <div class="bubble customer">Hi, I need help fixing a broken door. Are you available?</div>
+            </div>
+            <div>
+              <div class="label">CrewFollo AI</div>
+              <div class="bubble ai">Thanks for reaching out. Could you please send a photo and let us know what exactly is broken or not working properly with the door?</div>
+            </div>
+            <div>
+              <div class="label">CrewFollo AI</div>
+              <div class="bubble ai">We can help you schedule an estimate and send your details to the right crew member.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Built for small contractors who cannot answer every lead instantly.</h2>
+        <p class="section-subtitle">Most small service businesses lose jobs because calls are missed, messages are answered too late, or follow-ups are forgotten. CrewFollo AI is designed to help turn more inbound requests into booked estimates.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>Instant Lead Replies</h3>
+            <p>Generate clear, professional responses for customer messages across common home service jobs.</p>
+          </div>
+          <div class="card">
+            <h3>Job Detail Collection</h3>
+            <p>Ask the right questions, request photos, collect location details, and understand the service needed.</p>
+          </div>
+          <div class="card">
+            <h3>Follow-Up Reminders</h3>
+            <p>Help contractors follow up with potential customers before the lead goes cold.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="container">
+        <h2 class="section-title">How CrewFollo AI works</h2>
+        <p class="section-subtitle">A simple workflow for capturing leads, qualifying requests, and preparing the next step.</p>
+        <div class="steps">
+          <div class="step">
+            <h3>Capture</h3>
+            <p>A new customer request comes in by message, form, or phone workflow.</p>
+          </div>
+          <div class="step">
+            <h3>Qualify</h3>
+            <p>The AI asks for job details, photos, timing, and location.</p>
+          </div>
+          <div class="step">
+            <h3>Prepare</h3>
+            <p>The contractor receives a clean summary and suggested reply.</p>
+          </div>
+          <div class="step">
+            <h3>Follow Up</h3>
+            <p>CrewFollo AI helps remind customers and keep leads moving.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Early MVP features</h2>
+        <div class="cards">
+          <div class="card">
+            <h3>AI Reply Generator</h3>
+            <p>Professional customer replies for common trade and handyman requests.</p>
+          </div>
+          <div class="card">
+            <h3>Photo Request Flow</h3>
+            <p>Automatically ask customers for photos so the contractor can estimate better.</p>
+          </div>
+          <div class="card">
+            <h3>Lead Summary</h3>
+            <p>Turn messy customer messages into clean job notes for the business owner.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-box">
+        <h2 class="section-title">Want to test CrewFollo AI?</h2>
+        <p>We are preparing early pilot tests for home service businesses in Los Angeles and beyond.</p>
+        <a class="button-primary" href="https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK">Request Early Access</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© 2026 CrewFollo AI. All rights reserved.</div>
+      <div>Contact: crewfollo@proton.me</div>
+    </div>
+  </footer>
+</body>
+</html>
 
