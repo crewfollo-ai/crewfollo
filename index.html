@@ -1,467 +1,759 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CrewFollo AI — AI Receptionist for Home Service Businesses</title>
-  <meta name="description" content="CrewFollo AI helps home service businesses answer leads, request job details, schedule estimates, and follow up automatically." />
-  <meta name="robots" content="noindex, nofollow" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #0b1020;
-      color: #ffffff;
-      line-height: 1.6;
-    }
-    a { color: inherit; text-decoration: none; }
-    .container { width: min(1120px, 92%); margin: 0 auto; }
-    header {
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: rgba(11, 16, 32, 0.88);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-    .logo { font-size: 22px; font-weight: 900; letter-spacing: -0.04em; }
-    .logo span { color: #70e1c8; }
-    .nav-links { display: flex; align-items: center; gap: 18px; color: #c8d2ee; font-size: 14px; }
-    .nav a.button-small {
-      padding: 10px 16px;
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      color: #e9eefc;
-      font-weight: 700;
-    }
-    .hero {
-      padding: 88px 0 72px;
-      background:
-        radial-gradient(circle at top left, rgba(112,225,200,0.25), transparent 38%),
-        radial-gradient(circle at top right, rgba(113,139,255,0.22), transparent 34%);
-    }
-    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
-    .badge {
-      display: inline-block;
-      padding: 8px 12px;
-      margin-bottom: 22px;
-      border: 1px solid rgba(112,225,200,0.35);
-      background: rgba(112,225,200,0.08);
-      border-radius: 999px;
-      color: #9bf4df;
-      font-size: 14px;
-      font-weight: 800;
-    }
-    h1 {
-      font-size: clamp(42px, 6vw, 72px);
-      line-height: 0.98;
-      letter-spacing: -0.065em;
-      margin-bottom: 24px;
-    }
-    .hero p { font-size: 20px; color: #c8d2ee; max-width: 680px; margin-bottom: 32px; }
-    .buttons { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
-    .button-primary, .button-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-weight: 900;
-      transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-    .button-primary { background: #70e1c8; color: #08101f; }
-    .button-secondary { border: 1px solid rgba(255,255,255,0.18); color: #e9eefc; }
-    .button-primary:hover, .button-secondary:hover { transform: translateY(-1px); opacity: 0.92; }
-    .demo-card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
-    }
-    .chat { display: grid; gap: 14px; }
-    .bubble { padding: 14px 16px; border-radius: 16px; font-size: 15px; }
-    .customer { background: rgba(255,255,255,0.12); color: #edf3ff; }
-    .ai { background: rgba(112,225,200,0.16); color: #dffff8; border: 1px solid rgba(112,225,200,0.22); }
-    .owner { background: rgba(113,139,255,0.16); color: #eef2ff; border: 1px solid rgba(113,139,255,0.22); }
-    .label { font-size: 12px; color: #91a0c2; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
-    section { padding: 72px 0; }
-    .section-title {
-      font-size: clamp(32px, 4vw, 48px);
-      letter-spacing: -0.045em;
-      line-height: 1.05;
-      margin-bottom: 18px;
-    }
-    .section-subtitle { color: #b9c5e6; font-size: 18px; max-width: 820px; margin-bottom: 34px; }
-    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 24px;
-    }
-    .card h3 { font-size: 20px; margin-bottom: 10px; letter-spacing: -0.02em; }
-    .card p { color: #bdc8e8; font-size: 16px; }
-    .problem, .soft-section {
-      background: rgba(255,255,255,0.035);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .pill-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-    .pill {
-      padding: 11px 14px;
-      border-radius: 999px;
-      background: rgba(112,225,200,0.08);
-      border: 1px solid rgba(112,225,200,0.18);
-      color: #dffff8;
-      font-weight: 800;
-      font-size: 14px;
-    }
-    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: step; }
-    .step {
-      background: #111a33;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 18px;
-      padding: 22px;
-      position: relative;
-    }
-    .step::before {
-      counter-increment: step;
-      content: counter(step);
-      display: inline-flex;
-      width: 30px;
-      height: 30px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: #70e1c8;
-      color: #08101f;
-      font-weight: 900;
-      margin-bottom: 18px;
-    }
-    .step h3 { font-size: 18px; margin-bottom: 8px; }
-    .step p { color: #bdc8e8; font-size: 15px; }
-    .feature-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .feature-item {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 18px;
-      padding: 20px;
-    }
-    .feature-item strong { display: block; margin-bottom: 6px; font-size: 18px; }
-    .feature-item span { color: #bdc8e8; }
-    .workflow {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 22px;
-      align-items: stretch;
-    }
-    .workflow-box {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 22px;
-      padding: 24px;
-    }
-    .summary-list { display: grid; gap: 12px; margin-top: 10px; }
-    .summary-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      color: #c8d2ee;
-    }
-    .summary-line strong { color: #ffffff; }
-    .roadmap { display: grid; gap: 14px; }
-    .roadmap-item {
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 18px;
-      align-items: start;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 18px;
-      padding: 20px;
-    }
-    .phase {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(112,225,200,0.12);
-      color: #9bf4df;
-      font-weight: 900;
-      font-size: 13px;
-    }
-    .roadmap-item h3 { margin-bottom: 6px; font-size: 18px; }
-    .roadmap-item p { color: #bdc8e8; }
-    .founder-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-    .highlight {
-      background: linear-gradient(135deg, rgba(112,225,200,0.12), rgba(113,139,255,0.12));
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 22px;
-      padding: 26px;
-    }
-    .highlight h3 { font-size: 24px; margin-bottom: 12px; letter-spacing: -0.03em; }
-    .highlight p { color: #c8d2ee; }
-    .cta {
-      background: linear-gradient(135deg, rgba(112,225,200,0.18), rgba(113,139,255,0.18));
-      border-top: 1px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .cta-box { text-align: center; max-width: 820px; margin: 0 auto; }
-    .cta-box p { color: #c8d2ee; font-size: 18px; margin: 16px 0 28px; }
-    footer { padding: 32px 0; color: #8492b7; font-size: 14px; }
-    footer .footer-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 24px;
-    }
-    @media (max-width: 900px) {
-      .hero-grid, .cards, .steps, .feature-list, .workflow, .founder-box { grid-template-columns: 1fr; }
-      .roadmap-item { grid-template-columns: 1fr; }
-      .hero { padding: 64px 0 48px; }
-      section { padding: 52px 0; }
-      .nav-links a:not(.button-small) { display: none; }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="container nav">
-      <div class="logo">CrewFollo <span>AI</span></div>
-      <nav class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#pilot">Pilot</a>
-        <a class="button-small" href="mailto:crewfolloai@gmail.com">Contact</a>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CrewFollo AI &mdash; AI Lead Assistant for Home Service Businesses</title>
+    <meta name="description" content="CrewFollo AI helps handymen, painters, plumbers, cleaners, roofers, and small contractors respond faster, collect job details, request photos, and follow up with new leads.">
+    <meta property="og:title" content="CrewFollo AI &mdash; AI Lead Assistant for Home Service Businesses">
+    <meta property="og:description" content="Respond faster. Collect job details. Book more estimates.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://crewfollo-ai.github.io/crewfollo/">
+    <meta name="theme-color" content="#08172f">
+    <link rel="canonical" href="https://crewfollo-ai.github.io/crewfollo/">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-phone" viewBox="0 0 24 24">
+        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z"/>
+      </symbol>
+      <symbol id="icon-chat" viewBox="0 0 24 24">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"/>
+      </symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/>
+      </symbol>
+      <symbol id="icon-photo" viewBox="0 0 24 24">
+        <path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/>
+        <path d="m21 15-5-5L5 21"/>
+        <path d="M8.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>
+      </symbol>
+      <symbol id="icon-map-pin" viewBox="0 0 24 24">
+        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+        <path d="M12 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+      </symbol>
+      <symbol id="icon-wrench" viewBox="0 0 24 24">
+        <path d="M14.7 6.3a5 5 0 0 0 6.1 6.1L12.5 20.7a2.5 2.5 0 0 1-3.5-3.5l8.3-8.3Z"/>
+        <path d="m5 19-2 2"/>
+      </symbol>
+      <symbol id="icon-checklist" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11"/>
+        <path d="m3.5 6 1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/>
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/>
+        <path d="M12 6v6l4 2"/>
+      </symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </symbol>
+      <symbol id="icon-shield" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </symbol>
+      <symbol id="icon-spark" viewBox="0 0 24 24">
+        <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/>
+        <path d="M19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"/>
+      </symbol>
+    </svg>
+
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="index.html#top" aria-label="CrewFollo AI home">
+          <span class="brand-mark">CF</span>
+          <span>CrewFollo AI</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-menu" id="nav-menu">
+          <a href="demo.html">Product</a>
+          <a href="index.html#how-it-works">How it works</a>
+          <a href="index.html#use-cases">Use cases</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="#pilot">Pilot</a>
+          <a href="#faq">FAQ</a>
+          <a class="nav-cta" href="#apply">Apply</a>
+        </div>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <svg class="icon" aria-hidden="true"><use href="#icon-spark"></use></svg>
+              AI lead assistant for small contractors
+            </p>
+            <h1><span class="title-line">AI Lead</span> <span class="title-line">Assistant for</span> <span class="title-line">Home Service</span> <span class="title-line">Businesses</span></h1>
+            <p class="hero-subtitle">Respond faster. Collect job details. <span>Book more estimates.</span></p>
+            <p class="hero-text">CrewFollo AI helps small contractors answer new leads, request photos, qualify jobs, prepare professional replies, and follow up automatically, even while the owner is busy on the job.</p>
+            <div class="hero-actions" aria-label="Hero calls to action">
+              <a class="button button-primary" href="#apply">
+                Apply for Early Pilot
+                <svg class="button-icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+              </a>
+              <a class="button button-secondary" href="#workflow">See Example Workflow</a>
+            </div>
+            <div class="outcome-grid" aria-label="CrewFollo outcomes">
+              <article class="outcome-card">
+                <svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg>
+                <h3>24/7 lead response</h3>
+                <p>Never let a new inquiry sit unanswered.</p>
+              </article>
+              <article class="outcome-card">
+                <svg class="icon" aria-hidden="true"><use href="#icon-photo"></use></svg>
+                <h3>Photo + job detail collection</h3>
+                <p>Ask for photos, ZIP code, timing, urgency, and service type.</p>
+              </article>
+              <article class="outcome-card">
+                <svg class="icon" aria-hidden="true"><use href="#icon-chat"></use></svg>
+                <h3>Follow-up assistant</h3>
+                <p>Send polite follow-ups when customers go quiet.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="CrewFollo product mockup">
+            <figure class="image-card hero-photo-card">
+              <img src="https://images.unsplash.com/photo-1765277789186-04b71a9afd40?auto=format&fit=crop&w=960&q=72" width="960" height="640" alt="Tools and supplies arranged in a room under renovation" fetchpriority="high">
+              <figcaption>
+                <span>Built around real job requests</span>
+                <strong>Photos, timing, service area, and next steps organized before the owner calls back.</strong>
+              </figcaption>
+            </figure>
+            <div class="mockup-shell">
+              <div class="mockup-header">
+                <div>
+                  <span class="status-dot"></span>
+                  <span>Lead workspace</span>
+                </div>
+                <span class="badge badge-live">Owner review</span>
+              </div>
+              <div class="mockup-body">
+                <div class="message-card incoming">
+                  <div class="message-top">
+                    <span>Incoming Lead</span>
+                    <span>2 min ago</span>
+                  </div>
+                  <p>"Hi, I need drywall repair. Can you come this week?"</p>
+                </div>
+                <div class="message-card assistant">
+                  <div class="message-top">
+                    <span>CrewFollo asks</span>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-chat"></use></svg>
+                  </div>
+                  <p>"Please send photos, your ZIP code, preferred time, and whether this is urgent."</p>
+                </div>
+                <div class="summary-panel">
+                  <div class="summary-title">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg>
+                    <span>Owner receives</span>
+                  </div>
+                  <dl>
+                    <div><dt>Job type</dt><dd>Drywall repair</dd></div>
+                    <div><dt>Location</dt><dd>900xx</dd></div>
+                    <div><dt>Photos</dt><dd>Requested</dd></div>
+                    <div><dt>Urgency</dt><dd>This week</dd></div>
+                    <div><dt>Next step</dt><dd>Estimate</dd></div>
+                    <div><dt>Suggested reply</dt><dd><span class="ready-pill">Ready</span></dd></div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tight" id="workflow">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Example workflow</p>
+            <h2>From messy lead to clear next step</h2>
+            <p>A customer message becomes a photo request, lead summary, and owner-ready reply.</p>
+          </div>
+          <div class="workflow-board">
+            <article class="workflow-column">
+              <span class="mini-label">Customer</span>
+              <p>My door is broken and does not close right. Can you fix it?</p>
+            </article>
+            <article class="workflow-column highlighted">
+              <span class="mini-label">CrewFollo AI</span>
+              <p>Could you please send a few photos of the door, hinges, and frame? Also share your ZIP code and preferred timing.</p>
+            </article>
+            <article class="workflow-column">
+              <span class="mini-label">Owner summary</span>
+              <ul class="clean-list">
+                <li>Job type: Door repair</li>
+                <li>Needed details: Photos, ZIP code, timing</li>
+                <li>Next step: Request photos and schedule estimate</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-preview-section" id="product-preview">
+        <div class="container product-preview-grid">
+          <div class="section-heading">
+            <p class="eyebrow">Product preview</p>
+            <h2>A practical lead workspace for small service businesses</h2>
+            <p>CrewFollo turns incoming messages into a structured lead intake flow: customer context, job details, photo requests, suggested replies, and follow-up prompts in one owner-friendly view.</p>
+            <div class="inline-actions">
+              <a class="button button-primary" href="demo.html">View Product Demo</a>
+              <a class="button button-secondary" href="assets/pitch-deck.pdf" download>Download Pitch Deck</a>
+            </div>
+          </div>
+          <div class="product-preview-panel" aria-label="CrewFollo product preview cards">
+            <article class="product-mini-card">
+              <span class="mini-label">New lead</span>
+              <h3>Drywall repair request</h3>
+              <p>"Can you come this week?"</p>
+              <ul class="clean-list">
+                <li>Source: Website form</li>
+                <li>Missing: Photos, ZIP code</li>
+              </ul>
+            </article>
+            <article class="product-mini-card active">
+              <span class="mini-label">Assistant action</span>
+              <h3>Ask for the right details</h3>
+              <p>Photo request, urgency, timing, service area, and access notes prepared for owner review.</p>
+            </article>
+            <article class="product-mini-card">
+              <span class="mini-label">Owner view</span>
+              <h3>Ready-to-send reply</h3>
+              <p>Clear next step with a professional message draft and follow-up reminder.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section problem-section" id="problem">
+        <div class="container two-column">
+          <div class="section-heading">
+            <p class="eyebrow">The problem</p>
+            <h2>Small contractors lose jobs when replies are slow.</h2>
+            <p>When you're on a ladder, driving to a job, buying materials, or talking to another customer, new leads can sit unanswered. By the time you reply, the customer may have already booked someone else.</p>
+            <p>CrewFollo keeps the conversation moving by preparing fast replies, asking for the right job details, and organizing every lead into a clean summary.</p>
+            <figure class="image-card section-photo-card">
+              <img src="https://images.unsplash.com/photo-1562259929-b4e1fd3aef09?auto=format&fit=crop&w=760&q=72" width="760" height="520" alt="Cordless drill and hand tools on a work surface" loading="lazy" decoding="async">
+              <figcaption>
+                <span>Less back-and-forth</span>
+                <strong>Request the right details before the estimate conversation starts.</strong>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="problem-grid" aria-label="Lead follow-up problems">
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-phone"></use></svg><span>Missed calls</span></article>
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-chat"></use></svg><span>Slow text replies</span></article>
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg><span>Messy customer details</span></article>
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-photo"></use></svg><span>No photos before estimate</span></article>
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg><span>Forgotten follow-ups</span></article>
+            <article class="small-card"><svg class="icon" aria-hidden="true"><use href="#icon-map-pin"></use></svg><span>Lost jobs</span></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section before-after-section">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Before / after</p>
+            <h2>Before CrewFollo vs. After CrewFollo</h2>
+          </div>
+          <div class="compare-grid">
+            <article class="compare-card before">
+              <h3>Before CrewFollo</h3>
+              <ul class="check-list muted">
+                <li>Missed calls</li>
+                <li>Slow text replies</li>
+                <li>No photos before estimate</li>
+                <li>Messy customer details</li>
+                <li>Forgotten follow-ups</li>
+                <li>Lost jobs</li>
+              </ul>
+            </article>
+            <article class="compare-card after">
+              <div class="compare-title">
+                <h3>After CrewFollo</h3>
+                <span class="badge">Better organized</span>
+              </div>
+              <ul class="check-list positive">
+                <li>Fast first response</li>
+                <li>Photos and ZIP code requested</li>
+                <li>Job type and urgency captured</li>
+                <li>Clean summary for the owner</li>
+                <li>Suggested next reply ready</li>
+                <li>Follow-up prepared</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section how-section" id="how-it-works">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">How it works</p>
+            <h2>How CrewFollo works</h2>
+            <p>From first message to follow-up, CrewFollo helps keep every lead moving.</p>
+          </div>
+          <div class="timeline" aria-label="CrewFollo workflow steps">
+            <article class="timeline-step">
+              <span class="step-number">1</span>
+              <h3>Capture</h3>
+              <p>A new lead comes from Facebook, Google, Yelp, your website, SMS, or referral.</p>
+            </article>
+            <article class="timeline-step">
+              <span class="step-number">2</span>
+              <h3>Qualify</h3>
+              <p>CrewFollo asks the right questions: service type, photos, ZIP code, timing, urgency, and access details.</p>
+            </article>
+            <article class="timeline-step">
+              <span class="step-number">3</span>
+              <h3>Summarize</h3>
+              <p>The owner receives a clean lead summary with missing details and the recommended next step.</p>
+            </article>
+            <article class="timeline-step">
+              <span class="step-number">4</span>
+              <h3>Follow up</h3>
+              <p>CrewFollo prepares polite follow-up messages when customers go quiet.</p>
+            </article>
+            <article class="timeline-step">
+              <span class="step-number">5</span>
+              <h3>Book estimate</h3>
+              <p>The conversation moves toward a scheduled estimate or next action.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="use-cases">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Use cases by trade</p>
+            <h2>Built for real home service work</h2>
+            <p>CrewFollo is designed around the way small contractors actually get leads.</p>
+          </div>
+          <div class="trade-grid">
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-wrench"></use></svg><h3>Handyman</h3><p>Door repair, drywall patches, fixture installs, small repairs.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-photo"></use></svg><h3>Painter</h3><p>Room size, surface condition, photos, preferred timing.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-phone"></use></svg><h3>Plumber</h3><p>Leak type, urgency, photos/video, access details.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg><h3>Cleaner</h3><p>Property size, rooms, move-in/move-out, schedule window.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-photo"></use></svg><h3>Roofer</h3><p>Leak location, photos, emergency status, property type.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-map-pin"></use></svg><h3>Landscaper</h3><p>Service type, yard size, photos, recurring or one-time.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg><h3>Electrician</h3><p>Fixture type, issue description, safety urgency, access details.</p></article>
+            <article class="trade-card"><svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg><h3>Tile / Flooring</h3><p>Room size, material type, photos, repair or installation.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section features-section" id="features">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Features</p>
+            <h2>Everything you need to organize new leads faster</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-spark"></use></svg><h3>AI reply generator</h3><p>Prepare professional replies for new leads in seconds.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-photo"></use></svg><h3>Photo request flow</h3><p>Ask customers for the photos you need before giving an estimate.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg><h3>Lead qualification</h3><p>Collect job type, urgency, location, timing, and access details.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-chat"></use></svg><h3>Clean lead summary</h3><p>Turn messy customer messages into a simple job summary.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg><h3>Follow-up assistant</h3><p>Prepare friendly reminders when a lead stops responding.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg><h3>Estimate workflow</h3><p>Move qualified leads toward a call, site visit, or estimate.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg><h3>Owner approval</h3><p>Keep the owner in control before messages are sent.</p></article>
+            <article class="feature-card"><svg class="icon" aria-hidden="true"><use href="#icon-wrench"></use></svg><h3>Simple setup</h3><p>Built for small crews without complex CRM systems.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section collect-section">
+        <div class="container collect-grid">
+          <div class="section-heading">
+            <p class="eyebrow">Lead details</p>
+            <h2>Get the details you need before you call back.</h2>
+            <p>CrewFollo helps turn scattered customer messages into a practical lead packet the owner can review fast.</p>
+          </div>
+          <div class="collect-card">
+            <div class="collect-card-header">
+              <svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg>
+              <span>Lead intake checklist</span>
+            </div>
+            <ul class="detail-checklist">
+              <li>Customer name</li>
+              <li>Phone or email</li>
+              <li>Service type</li>
+              <li>Photos or video</li>
+              <li>ZIP code / service area</li>
+              <li>Urgency</li>
+              <li>Preferred time window</li>
+              <li>Property type</li>
+              <li>Access notes</li>
+              <li>Budget or estimate expectation</li>
+              <li>Next recommended action</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section field-section">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Built for field work</p>
+            <h2>Built for contractors who are busy working, driving, and managing jobs.</h2>
+          </div>
+          <div class="field-media-grid" aria-label="Field service work contexts">
+            <figure class="image-card field-photo-card field-photo-wide">
+              <img src="https://images.unsplash.com/photo-1570841398869-1e82bbdb3042?auto=format&fit=crop&w=900&q=72" width="900" height="560" alt="Coffee mug and vehicle key on a clean table" loading="lazy" decoding="async">
+              <figcaption>
+                <span>Between jobs</span>
+                <strong>Lead notes stay clean while the day keeps moving.</strong>
+              </figcaption>
+            </figure>
+            <figure class="image-card field-photo-card">
+              <img src="https://images.unsplash.com/photo-1622126977176-bf029dbf6ed0?auto=format&fit=crop&w=720&q=72" width="720" height="560" alt="Clean desk with a computer monitor in a small workspace" loading="lazy" decoding="async">
+              <figcaption>
+                <span>Owner review</span>
+                <strong>Suggested replies stay ready for approval.</strong>
+              </figcaption>
+            </figure>
+            <figure class="image-card field-photo-card">
+              <img src="https://images.unsplash.com/photo-1621237017715-7f84b8df2492?auto=format&fit=crop&w=720&q=72" width="720" height="560" alt="Interior door detail in a home repair setting" loading="lazy" decoding="async">
+              <figcaption>
+                <span>Job context</span>
+                <strong>Ask for photos before guessing at the scope.</strong>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="field-grid">
+            <article class="field-card"><svg class="icon" aria-hidden="true"><use href="#icon-wrench"></use></svg><h3>On the job</h3><p>CrewFollo prepares replies while the owner is working.</p></article>
+            <article class="field-card"><svg class="icon" aria-hidden="true"><use href="#icon-map-pin"></use></svg><h3>In the truck</h3><p>New leads get a fast response before they call someone else.</p></article>
+            <article class="field-card"><svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg><h3>After hours</h3><p>Customers still get a professional first reply.</p></article>
+            <article class="field-card"><svg class="icon" aria-hidden="true"><use href="#icon-checklist"></use></svg><h3>Between jobs</h3><p>The owner gets clean summaries instead of messy messages.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section pilot-section" id="pilot">
+        <div class="container pilot-grid">
+          <div class="pilot-copy">
+            <p class="eyebrow">Early pilot program</p>
+            <h2>Join the early CrewFollo AI pilot</h2>
+            <p>We're looking for 5-10 home service businesses in the Los Angeles area to test CrewFollo AI during the early MVP stage.</p>
+            <p>Pilot users get help setting up a custom lead workflow for their trade, including service questions, photo requests, reply templates, lead summaries, and follow-up messages.</p>
+            <a class="button button-primary" href="#apply">Apply for Early Pilot</a>
+          </div>
+          <div class="pilot-lists">
+            <article class="pilot-card">
+              <h3>Best fit for</h3>
+              <ul class="pill-list">
+                <li>Handymen</li><li>Painters</li><li>Plumbers</li><li>Electricians</li><li>Cleaners</li><li>Roofers</li><li>Landscapers</li><li>Flooring pros</li><li>Tile installers</li><li>Small family-owned service businesses</li><li>Property maintenance teams</li>
+              </ul>
+            </article>
+            <article class="pilot-card">
+              <h3>Pilot users get</h3>
+              <ul class="check-list positive compact">
+                <li>Free setup help</li>
+                <li>Custom lead intake flow for your trade</li>
+                <li>AI reply templates for your services</li>
+                <li>Photo request workflow</li>
+                <li>Lead summary format</li>
+                <li>Follow-up message templates</li>
+                <li>Direct founder support</li>
+                <li>Discounted early access pricing after launch</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section integrations-section">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">Lead sources</p>
+            <h2>Works where your leads already come from</h2>
+          </div>
+          <div class="integrations-grid">
+            <article class="integration-card">
+              <div class="integration-title">
+                <h3>Current / MVP</h3>
+                <span class="badge badge-current">Available workflow</span>
+              </div>
+              <ul class="logo-list">
+                <li>Website forms</li>
+                <li>SMS templates</li>
+                <li>Email replies</li>
+                <li>Manual lead copy-paste</li>
+                <li>Google Forms intake</li>
+              </ul>
+            </article>
+            <article class="integration-card planned">
+              <div class="integration-title">
+                <h3>Planned</h3>
+                <span class="badge badge-planned">Roadmap</span>
+              </div>
+              <ul class="logo-list">
+                <li>Google Business Profile</li>
+                <li>Facebook</li>
+                <li>Yelp</li>
+                <li>Thumbtack</li>
+                <li>Google Calendar</li>
+                <li>Jobber</li>
+                <li>Housecall Pro</li>
+                <li>ServiceTitan</li>
+                <li>HubSpot</li>
+                <li>Zapier</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section trust-section">
+        <div class="container trust-grid">
+          <div class="section-heading">
+            <p class="eyebrow">Founder / trust</p>
+            <h2>Built from real field-service problems</h2>
+            <p>CrewFollo AI is being built around real problems from local service work: missed calls, unclear job details, slow follow-up, and messy customer communication.</p>
+          </div>
+          <div class="trust-content">
+            <div class="founder-card">
+              <svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg>
+              <p>Built by a founder focused on helping small service businesses respond faster, stay organized, and win more jobs without adding office staff.</p>
+            </div>
+            <ul class="trust-list">
+              <li>Designed for small crews, not enterprise call centers</li>
+              <li>Owner stays in control of final replies</li>
+              <li>No fake promises or robotic spam</li>
+              <li>Customer messages can be reviewed before sending</li>
+              <li>Simple setup, no complex CRM required</li>
+              <li>Built for practical workflows contractors actually use</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section pricing-section" id="pricing">
+        <div class="container pricing-grid">
+          <div class="section-heading">
+            <p class="eyebrow">Pilot pricing</p>
+            <h2>Early access for small contractors</h2>
+            <p>Start with a practical workflow for your trade and keep the setup simple.</p>
+          </div>
+          <article class="pricing-card">
+            <div class="pricing-card-top">
+              <span class="badge">Early Pilot Plan</span>
+              <p>For small contractors testing CrewFollo AI.</p>
+            </div>
+            <ul class="check-list positive">
+              <li>AI reply generator</li>
+              <li>Lead summary</li>
+              <li>Photo request flow</li>
+              <li>Follow-up templates</li>
+              <li>Founder setup support</li>
+              <li>Custom workflow for your trade</li>
+            </ul>
+            <div class="pricing-note">
+              <strong>Pilot pricing available after application.</strong>
+              <span>Pilot users get discounted early access pricing after launch.</span>
+            </div>
+            <a class="button button-primary button-full" href="#apply">Apply for Pilot Pricing</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section faq-section" id="faq">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow">FAQ</p>
+            <h2>Common pilot questions</h2>
+          </div>
+          <div class="faq-list">
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="true">
+                <span>Is CrewFollo AI a phone receptionist or message assistant?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer">
+                <p>The first MVP focuses on lead replies, job detail collection, photo requests, summaries, and follow-up workflows. Voice receptionist and calendar booking are on the roadmap.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Will AI send messages automatically?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>During the MVP stage, CrewFollo can prepare replies for owner review. Automated sending can be added later when the workflow is ready.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Can it ask customers for photos?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>Yes. CrewFollo can prepare photo request flows for jobs like drywall, leaks, doors, tile, painting, repairs, cleaning, and maintenance.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Who is this for?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>CrewFollo is built for handymen, painters, plumbers, electricians, cleaners, roofers, landscapers, flooring pros, tile installers, and small contractors.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Does it replace a receptionist?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>Not at first. CrewFollo helps small businesses respond faster, organize leads, and prepare follow-ups before a full receptionist workflow.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Can it work in Spanish or Russian?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>Bilingual workflows are planned for businesses serving multilingual customers.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>How do I join the pilot?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>Apply for early access and share your trade, service area, and where your leads come from.</p>
+              </div>
+            </article>
+            <article class="faq-item">
+              <button class="faq-question" type="button" aria-expanded="false">
+                <span>Do I need a CRM?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>No. CrewFollo is being designed for small crews that may not use a complex CRM yet.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section apply-section" id="apply">
+        <div class="container apply-grid">
+          <div class="apply-copy">
+            <p class="eyebrow">Apply</p>
+            <h2>Apply for the early pilot</h2>
+            <p>Tell us where your leads come from and what slows down your follow-up. We'll review whether CrewFollo is a fit for your trade and service area.</p>
+            <div class="contact-card">
+              <span>Prefer email?</span>
+              <a href="mailto:crewfolloai@gmail.com">crewfolloai@gmail.com</a>
+            </div>
+          </div>
+          <form class="pilot-form" id="pilot-form" action="mailto:crewfolloai@gmail.com" method="post" enctype="text/plain">
+            <div class="form-grid">
+              <label>
+                <span>Name</span>
+                <input type="text" name="name" autocomplete="name" required>
+              </label>
+              <label>
+                <span>Business name</span>
+                <input type="text" name="business_name" autocomplete="organization" required>
+              </label>
+              <label>
+                <span>Trade</span>
+                <input type="text" name="trade" placeholder="Handyman, painter, plumber..." required>
+              </label>
+              <label>
+                <span>Service area</span>
+                <input type="text" name="service_area" placeholder="Los Angeles, Pasadena, Long Beach..." required>
+              </label>
+              <label class="span-2">
+                <span>Phone or email</span>
+                <input type="text" name="contact" autocomplete="email" required>
+              </label>
+            </div>
+            <fieldset>
+              <legend>Where do your leads come from?</legend>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" name="lead_sources" value="Facebook"> <span>Facebook</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Google"> <span>Google</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Yelp"> <span>Yelp</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Thumbtack"> <span>Thumbtack</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Website"> <span>Website</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Referrals"> <span>Referrals</span></label>
+                <label><input type="checkbox" name="lead_sources" value="Other"> <span>Other</span></label>
+              </div>
+            </fieldset>
+            <label>
+              <span>Biggest lead follow-up problem</span>
+              <textarea name="follow_up_problem" rows="4" placeholder="Example: I miss calls while working, customers do not send photos, or I forget to follow up."></textarea>
+            </label>
+            <button class="button button-primary button-full" type="submit">Apply for Early Pilot</button>
+            <p class="form-note">Submitting opens a prefilled email to CrewFollo AI with your application details.</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="container final-cta-inner">
+          <div>
+            <p class="eyebrow">Ready when you are</p>
+            <h2>Stop letting good leads go cold.</h2>
+            <p>CrewFollo AI helps small service businesses respond faster, collect better job details, and follow up before customers move on.</p>
+          </div>
+          <div class="final-actions">
+            <a class="button button-primary" href="#apply">Apply for Early Pilot</a>
+            <a class="button button-secondary light" href="#workflow">See Example Workflow</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
         <div>
-          <div class="badge">AI receptionist for home service businesses</div>
-          <h1>Every lead answered. Every job followed up.</h1>
-          <p>CrewFollo AI helps handymen, painters, plumbers, electricians, cleaners, roofers, and small contractors respond to leads faster, request job details, schedule estimates, and follow up automatically.</p>
-          <div class="buttons">
-            <a class="button-primary" href="https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK">Request Early Access</a>
-            <a class="button-secondary" href="#workflow">See Example Workflow</a>
-          </div>
+          <a class="brand footer-brand" href="index.html#top" aria-label="CrewFollo AI home">
+            <span class="brand-mark">CF</span>
+            <span>CrewFollo AI</span>
+          </a>
+          <p>AI lead assistant for home service businesses.</p>
         </div>
-
-        <div class="demo-card">
-          <div class="chat">
-            <div>
-              <div class="label">Customer</div>
-              <div class="bubble customer">Hi, my sink is leaking. Can someone come today?</div>
-            </div>
-            <div>
-              <div class="label">CrewFollo AI</div>
-              <div class="bubble ai">Thanks for reaching out. Could you please send a photo or short video of the leak and confirm your ZIP code? We’ll check availability and help schedule the next step.</div>
-            </div>
-            <div>
-              <div class="label">Business owner receives</div>
-              <div class="bubble owner">Job type: Leak repair<br>Urgency: Same day<br>Photos: Requested<br>Next step: Schedule estimate</div>
-            </div>
-          </div>
+        <div class="footer-links" aria-label="Footer navigation">
+          <a href="demo.html">Product</a>
+          <a href="index.html#how-it-works">How it works</a>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#pilot">Pilot</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="assets/pitch-deck.pdf" download>Pitch Deck</a>
         </div>
       </div>
-    </section>
-
-    <section class="problem">
-      <div class="container">
-        <h2 class="section-title">Small contractors lose jobs when they respond too late.</h2>
-        <p class="section-subtitle">Home service businesses are usually working in the field, driving, buying materials, or talking to customers. They cannot answer every call or message instantly. By the time they reply, the customer may have already booked someone else. CrewFollo AI helps keep every customer request moving, even when the owner is busy on the job.</p>
+      <div class="container footer-bottom">
+        <p>CrewFollo AI is currently in early MVP / pilot stage. Some integrations and automation features are planned and may not be available yet.</p>
+        <p>&copy; 2026 CrewFollo AI.</p>
       </div>
-    </section>
+    </footer>
 
-    <section>
-      <div class="container">
-        <h2 class="section-title">Built for crews, solo contractors, and small family businesses.</h2>
-        <p class="section-subtitle">CrewFollo AI is designed for local service businesses that rely on fast replies, clear estimates, and consistent follow-up.</p>
-        <div class="pill-grid">
-          <span class="pill">Handymen</span>
-          <span class="pill">Painters</span>
-          <span class="pill">Plumbers</span>
-          <span class="pill">Electricians</span>
-          <span class="pill">Cleaners</span>
-          <span class="pill">Roofers</span>
-          <span class="pill">HVAC Crews</span>
-          <span class="pill">Drywall Contractors</span>
-          <span class="pill">Tile Installers</span>
-          <span class="pill">Flooring Pros</span>
-          <span class="pill">Landscapers</span>
-          <span class="pill">Garage & Door Repair</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="soft-section">
-      <div class="container">
-        <h2 class="section-title">Not a generic chatbot. A lead assistant for real service work.</h2>
-        <p class="section-subtitle">CrewFollo AI is built around how local contractors actually work: quick estimates, customer photos, service areas, schedule windows, job notes, and follow-ups.</p>
-        <div class="cards">
-          <div class="card">
-            <h3>Instant Lead Response</h3>
-            <p>Prepare fast, professional replies so you can respond while the lead is still active.</p>
-          </div>
-          <div class="card">
-            <h3>Job Detail Collection</h3>
-            <p>Ask the right questions, request photos, collect timing, location, and service details.</p>
-          </div>
-          <div class="card">
-            <h3>Estimate Scheduling</h3>
-            <p>Move qualified customers toward an estimate by suggesting the next clear step.</p>
-          </div>
-          <div class="card">
-            <h3>Automatic Follow-Up</h3>
-            <p>Prepare polite follow-up messages when a customer stops responding.</p>
-          </div>
-          <div class="card">
-            <h3>Built for Trades</h3>
-            <p>Designed for handyman, painting, plumbing, electrical, cleaning, roofing, HVAC, drywall, tile, and flooring businesses.</p>
-          </div>
-          <div class="card">
-            <h3>Bilingual Ready</h3>
-            <p>Future workflows can support English, Spanish, Russian, and other languages for local service teams.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="how-it-works">
-      <div class="container">
-        <h2 class="section-title">How CrewFollo AI works</h2>
-        <p class="section-subtitle">A simple workflow for capturing leads, qualifying requests, and preparing the next step.</p>
-        <div class="steps">
-          <div class="step">
-            <h3>Capture</h3>
-            <p>A customer calls or sends a message about a service job.</p>
-          </div>
-          <div class="step">
-            <h3>Qualify</h3>
-            <p>The AI collects photos, address, timing, service type, and key job details.</p>
-          </div>
-          <div class="step">
-            <h3>Prepare</h3>
-            <p>The contractor receives a clean summary and a professional suggested reply.</p>
-          </div>
-          <div class="step">
-            <h3>Follow Up</h3>
-            <p>CrewFollo AI helps prevent leads from going cold with reminders and follow-up messages.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="workflow" class="soft-section">
-      <div class="container">
-        <h2 class="section-title">Example lead flow</h2>
-        <p class="section-subtitle">A clear example of how CrewFollo AI can help turn a messy customer message into an organized job opportunity.</p>
-        <div class="workflow">
-          <div class="workflow-box">
-            <div class="chat">
-              <div>
-                <div class="label">Customer</div>
-                <div class="bubble customer">My door is broken and does not close right. Can you fix it?</div>
-              </div>
-              <div>
-                <div class="label">CrewFollo AI</div>
-                <div class="bubble ai">Thank you for reaching out. Could you please send a few photos of the door, hinges, and frame? Also, please let us know your ZIP code and when you would like the repair done.</div>
-              </div>
-            </div>
-          </div>
-          <div class="workflow-box">
-            <h3>Clean lead summary</h3>
-            <div class="summary-list">
-              <div class="summary-line"><strong>Job type</strong><span>Door repair</span></div>
-              <div class="summary-line"><strong>Needed details</strong><span>Photos, ZIP code, timing</span></div>
-              <div class="summary-line"><strong>Urgency</strong><span>Not confirmed</span></div>
-              <div class="summary-line"><strong>Next step</strong><span>Request photos and schedule estimate</span></div>
-              <div class="summary-line"><strong>Suggested reply</strong><span>Ready for owner review</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <h2 class="section-title">Early MVP features</h2>
-        <p class="section-subtitle">The first version is focused on helping small service businesses respond faster and organize leads better.</p>
-        <div class="feature-list">
-          <div class="feature-item"><strong>AI Reply Generator</strong><span>Professional replies for customer messages and service requests.</span></div>
-          <div class="feature-item"><strong>Photo Request Flow</strong><span>Automatically asks customers for pictures of the issue before an estimate.</span></div>
-          <div class="feature-item"><strong>Lead Summary</strong><span>Turns messy customer messages into clear job notes.</span></div>
-          <div class="feature-item"><strong>Follow-Up Assistant</strong><span>Prepares polite follow-ups when customers stop responding.</span></div>
-          <div class="feature-item"><strong>Estimate Request Workflow</strong><span>Helps move the customer toward booking an inspection or estimate.</span></div>
-          <div class="feature-item"><strong>Simple CRM Export</strong><span>Keeps lead details organized for the business owner.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="soft-section">
-      <div class="container">
-        <h2 class="section-title">Why now</h2>
-        <p class="section-subtitle">Local service businesses are moving online, but many still manage leads manually across phone calls, text messages, Google Business Profile, Yelp, Facebook, and other local platforms. AI can help small contractors respond faster without hiring a full-time receptionist.</p>
-        <div class="founder-box">
-          <div class="highlight">
-            <h3>Built from real field experience</h3>
-            <p>CrewFollo AI is being built with direct experience from the home service industry. The product is designed around real problems contractors face every day: missed calls, unclear job details, slow replies, and lost follow-ups.</p>
-          </div>
-          <div class="highlight">
-            <h3>Early-stage product</h3>
-            <p>CrewFollo AI is currently in early MVP development. We are testing workflows with local service businesses and building around real contractor needs, not generic chatbot use cases.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <h2 class="section-title">MVP roadmap</h2>
-        <p class="section-subtitle">A practical roadmap for building from a simple lead assistant into a more complete AI receptionist platform.</p>
-        <div class="roadmap">
-          <div class="roadmap-item"><div class="phase">Phase 1</div><div><h3>AI reply generator + lead summary</h3><p>Generate professional replies and organize customer messages into clean job notes.</p></div></div>
-          <div class="roadmap-item"><div class="phase">Phase 2</div><div><h3>Photo request flow + follow-up reminders</h3><p>Request photos automatically and help prevent leads from going cold.</p></div></div>
-          <div class="roadmap-item"><div class="phase">Phase 3</div><div><h3>SMS and email workflows</h3><p>Connect lead intake and follow-up messages to simple communication workflows.</p></div></div>
-          <div class="roadmap-item"><div class="phase">Phase 4</div><div><h3>Voice receptionist and calendar booking</h3><p>Test AI phone intake, call summaries, and estimate scheduling.</p></div></div>
-          <div class="roadmap-item"><div class="phase">Phase 5</div><div><h3>Local platform and CRM integrations</h3><p>Explore integrations with Google Business Profile, Yelp, Facebook, calendars, and CRM tools.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="pilot" class="cta">
-      <div class="container cta-box">
-        <h2 class="section-title">Join the early pilot program</h2>
-        <p>We are looking for 5–10 small home service businesses to test CrewFollo AI during the early MVP stage. Pilot users will help shape the product and receive early access.</p>
-        <div class="buttons" style="justify-content:center;">
-          <a class="button-primary" href="https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK">Request Early Access</a>
-          <a class="button-secondary" href="mailto:crewfolloai@gmail.com">Contact Founder</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container footer-row">
-      <div>© 2026 CrewFollo AI. All rights reserved.</div>
-      <div>Service area focus: Los Angeles, CA · Contact: crewfolloai@gmail.com</div>
-    </div>
-  </footer
+    <script src="script.js"></script>
+  </body>
+</html>
