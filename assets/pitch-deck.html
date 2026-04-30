@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CrewFollo AI Pitch Deck</title>
+    <style>
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, Arial, sans-serif;
+        color: #08172f;
+        background: #f7f0e6;
+      }
+
+      .slide {
+        width: 16in;
+        height: 9in;
+        page-break-after: always;
+        display: grid;
+        grid-template-columns: 1fr 0.95fr;
+        gap: 0.5in;
+        padding: 0.72in;
+        background:
+          linear-gradient(135deg, rgba(255, 253, 248, 0.94), rgba(247, 240, 230, 0.92)),
+          linear-gradient(115deg, rgba(245, 158, 11, 0.16), rgba(37, 99, 235, 0.12));
+      }
+
+      .slide.dark {
+        color: #fffdf8;
+        background: #08172f;
+      }
+
+      .slide.full {
+        grid-template-columns: 1fr;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.14in;
+        color: #2563eb;
+        font-size: 0.15in;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .dark .eyebrow {
+        color: #f59e0b;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 0.8in;
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 0.5in;
+        line-height: 1.06;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 0.23in;
+      }
+
+      p {
+        margin: 0;
+        color: #52627a;
+        font-size: 0.19in;
+        line-height: 1.45;
+      }
+
+      .dark p {
+        color: #c2d2e8;
+      }
+
+      .lede {
+        margin-top: 0.28in;
+        max-width: 7.2in;
+        font-size: 0.27in;
+        color: #102343;
+      }
+
+      .dark .lede {
+        color: #d7e7ff;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.13in;
+        margin-bottom: 0.45in;
+        font-weight: 900;
+      }
+
+      .mark {
+        width: 0.48in;
+        height: 0.48in;
+        display: grid;
+        place-items: center;
+        border-radius: 0.08in;
+        background: linear-gradient(135deg, #08172f, #2563eb);
+        color: #fffdf8;
+      }
+
+      .dark .mark {
+        background: #f59e0b;
+        color: #08172f;
+      }
+
+      .card,
+      .mockup {
+        border: 1px solid #e5d8c9;
+        border-radius: 0.08in;
+        background: #fffdf8;
+        box-shadow: 0 0.18in 0.46in rgba(46, 31, 16, 0.12);
+      }
+
+      .card {
+        padding: 0.28in;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.22in;
+        margin-top: 0.36in;
+      }
+
+      .stack {
+        display: grid;
+        gap: 0.2in;
+      }
+
+      .metric {
+        padding: 0.22in;
+        border-radius: 0.08in;
+        background: #fff8e8;
+      }
+
+      .metric strong {
+        display: block;
+        margin-bottom: 0.06in;
+        color: #c76d00;
+        font-size: 0.34in;
+      }
+
+      ul {
+        display: grid;
+        gap: 0.12in;
+        margin: 0.28in 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      li {
+        position: relative;
+        padding-left: 0.28in;
+        color: #52627a;
+        font-size: 0.18in;
+        line-height: 1.36;
+      }
+
+      li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.08in;
+        width: 0.11in;
+        height: 0.11in;
+        border-radius: 50%;
+        background: #12a46f;
+      }
+
+      .dark li {
+        color: #d7e7ff;
+      }
+
+      .mockup {
+        align-self: center;
+        overflow: hidden;
+      }
+
+      .mockup-head {
+        padding: 0.18in 0.22in;
+        border-bottom: 1px solid #e5d8c9;
+        font-weight: 900;
+      }
+
+      .mockup-body {
+        display: grid;
+        gap: 0.16in;
+        padding: 0.22in;
+        background:
+          linear-gradient(90deg, rgba(229, 216, 201, 0.6) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(229, 216, 201, 0.6) 1px, transparent 1px),
+          #fff9f0;
+        background-size: 0.3in 0.3in;
+      }
+
+      .bubble {
+        padding: 0.18in;
+        border: 1px solid #e5d8c9;
+        border-radius: 0.08in;
+        background: #fffdf8;
+      }
+
+      .bubble.blue {
+        border-color: rgba(37, 99, 235, 0.28);
+        background: #f5f8ff;
+      }
+
+      .bubble.navy {
+        background: #08172f;
+        color: #fffdf8;
+      }
+
+      .footer {
+        align-self: end;
+        color: #637083;
+        font-size: 0.15in;
+      }
+
+      .cta {
+        display: inline-flex;
+        width: fit-content;
+        margin-top: 0.35in;
+        padding: 0.16in 0.24in;
+        border-radius: 0.08in;
+        background: #f59e0b;
+        color: #1d1200;
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="slide">
+      <div>
+        <div class="brand"><span class="mark">CF</span><span>CrewFollo AI</span></div>
+        <p class="eyebrow">Early pilot pitch deck</p>
+        <h1>AI Lead Assistant for Home Service Businesses</h1>
+        <p class="lede">Respond faster. Collect job details. Book more estimates.</p>
+        <div class="cta">Early pilot: Los Angeles home service businesses</div>
+      </div>
+      <div class="mockup">
+        <div class="mockup-head">Lead workspace</div>
+        <div class="mockup-body">
+          <div class="bubble">Incoming lead: "I need drywall repair this week."</div>
+          <div class="bubble blue">CrewFollo asks for photos, ZIP code, timing, and urgency.</div>
+          <div class="bubble navy">Owner summary: job type, location, next step, suggested reply.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide full">
+      <div>
+        <p class="eyebrow">Problem</p>
+        <h2>Small contractors lose jobs when they cannot reply fast enough.</h2>
+        <div class="grid">
+          <div class="card"><h3>Owners are busy</h3><p>They are on ladders, driving, buying materials, or talking with another customer.</p></div>
+          <div class="card"><h3>Leads need details</h3><p>Customers often send incomplete requests with no photos, ZIP code, timing, or clear scope.</p></div>
+          <div class="card"><h3>Follow-up slips</h3><p>Good prospects go quiet and are easy to forget without a simple system.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div>
+        <p class="eyebrow">Solution</p>
+        <h2>CrewFollo keeps the lead conversation moving.</h2>
+        <ul>
+          <li>Prepare fast, professional replies for new leads.</li>
+          <li>Ask for photos, ZIP code, urgency, timing, and access details.</li>
+          <li>Summarize every lead into an owner-friendly next step.</li>
+          <li>Prepare polite follow-ups when customers stop responding.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="metric"><strong>Fast response</strong><p>Never let a good inquiry sit unanswered.</p></div>
+        <div class="metric"><strong>Better intake</strong><p>Collect the details needed before the estimate call.</p></div>
+        <div class="metric"><strong>Owner control</strong><p>AI drafts the message. The owner approves the reply.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div>
+        <p class="eyebrow">Product / demo</p>
+        <h2>A simple workspace for lead intake, summaries, and follow-up.</h2>
+        <p class="lede">The MVP starts with message workflows and expands toward richer integrations, booking, and bilingual communication.</p>
+      </div>
+      <div class="mockup">
+        <div class="mockup-head">Estimate packet</div>
+        <div class="mockup-body">
+          <div class="bubble">Trade: Tile / flooring</div>
+          <div class="bubble">Photos: received</div>
+          <div class="bubble">Urgency: next 2 weeks</div>
+          <div class="bubble navy">Next step: schedule estimate</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide full">
+      <div>
+        <p class="eyebrow">Market / audience</p>
+        <h2>Built for small home service businesses that depend on local leads.</h2>
+        <div class="grid">
+          <div class="card"><h3>Primary users</h3><p>Handymen, painters, plumbers, electricians, cleaners, roofers, landscapers, flooring pros, and small contractors.</p></div>
+          <div class="card"><h3>Lead sources</h3><p>Google, Yelp, Facebook, Thumbtack, website forms, SMS, email, referrals, and manual copy-paste workflows.</p></div>
+          <div class="card"><h3>Best early market</h3><p>Owner-led and family-owned crews that are too busy for slow follow-up but not ready for complex CRM systems.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div>
+        <p class="eyebrow">Business model / growth</p>
+        <h2>Start narrow, prove value, expand workflow depth.</h2>
+        <ul>
+          <li>Early pilot with 5-10 Los Angeles home service businesses.</li>
+          <li>Founder-led setup for each trade and lead source.</li>
+          <li>Discounted early access pricing after launch.</li>
+          <li>Expansion path: integrations, calendar handoff, voice workflows, and bilingual support.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="card"><h3>Acquire</h3><p>Local contractor outreach, referrals, trade communities, and founder-led demos.</p></div>
+        <div class="card"><h3>Activate</h3><p>Set up one useful lead workflow in the first session.</p></div>
+        <div class="card"><h3>Expand</h3><p>Add templates, integrations, and automations as trust grows.</p></div>
+      </div>
+    </section>
+
+    <section class="slide dark">
+      <div>
+        <p class="eyebrow">Competitive advantage</p>
+        <h2>Focused on small contractors, not generic chat or enterprise call centers.</h2>
+        <ul>
+          <li>Trade-specific intake questions and photo request flows.</li>
+          <li>Owner approval and practical workflows for early trust.</li>
+          <li>Designed around messy local lead sources and small-team operations.</li>
+          <li>Simple setup for crews without complex CRM systems.</li>
+        </ul>
+      </div>
+      <div class="mockup">
+        <div class="mockup-head">Positioning</div>
+        <div class="mockup-body">
+          <div class="bubble">Not a generic chatbot</div>
+          <div class="bubble blue">Not an enterprise contact center</div>
+          <div class="bubble navy">A lead assistant for small home service businesses</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide full dark">
+      <div>
+        <div class="brand"><span class="mark">CF</span><span>CrewFollo AI</span></div>
+        <p class="eyebrow">CTA / next steps</p>
+        <h1>Join the early pilot.</h1>
+        <p class="lede">We are looking for practical feedback from home service businesses that want faster replies, cleaner intake, and better follow-up.</p>
+        <div class="cta">Apply for Early Pilot</div>
+        <p class="footer">Contact: crewfolloai@gmail.com</p>
+      </div>
+    </section>
+  </body>
+</html>
